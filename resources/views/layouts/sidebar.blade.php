@@ -2,6 +2,7 @@
 <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-100">
 
     <!-- Mobile sidebar backdrop -->
+    
     <div 
         x-show="sidebarOpen"
         x-transition:enter="transition ease-in-out duration-300"
@@ -13,6 +14,8 @@
         class="fixed inset-0 z-20 bg-black bg-opacity-50 sm:hidden"
         @click="sidebarOpen = false"
     ></div>
+
+    
 
     <!-- Sidebar -->
     <aside
@@ -53,6 +56,14 @@
                    class="flex items-center px-4 py-3 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 group {{ request()->routeIs('admin.users.*') ? 'bg-blue-700 shadow-lg' : '' }}">
                     <i class="fas fa-users w-6"></i>
                     <span class="ml-3 font-medium">Pengguna</span>
+                </a>
+
+
+                
+                <a href="{{ route('admin.payments.index') }}"
+                class="flex items-center px-4 py-3 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 group {{ request()->routeIs('admin.payments.*') ? 'bg-blue-700 shadow-lg' : '' }}">
+                    <i class="fas fa-credit-card w-6"></i>
+                    <span class="ml-3 font-medium">Kelola Pembayaran</span>
                 </a>
             </nav>
 

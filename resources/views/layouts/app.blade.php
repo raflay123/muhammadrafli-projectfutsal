@@ -92,7 +92,15 @@
                         <i class="fas fa-users w-5"></i>
                         <span class="ml-3 font-medium">Pengguna</span>
                     </a>
+
+                    <!-- Tambahkan di bawahnya -->
+                <a href="{{ route('admin.payments.index') }}"
+                class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 {{ request()->routeIs('admin.payments.*') ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : '' }}">
+                <i class="fas fa-credit-card w-5"></i>
+                <span class="ml-3 font-medium">Kelola Pembayaran</span>
+                </a>
                 </nav>
+
 
                 <!-- User Info -->
                 <div class="p-4 border-t border-gray-200">

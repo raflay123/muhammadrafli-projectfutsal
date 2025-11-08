@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\PaymentController;
 
 // Public routes
 Route::get('/', function () {
@@ -34,27 +36,48 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bookings', [BookingController::class, 'index'])->name('admin.bookings.index');
     Route::put('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('admin.bookings.status');
     
-    // Users management
-    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::put('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
-
-    // venue 
-    Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    // venue
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'App\Http\Middleware\CheckRole:admin'])->group(function () {
     // Venue Routes
     Route::resource('venues', VenueController::class);
+
+    // Users management
+    Route::resource('users', UserController::class);
+    Route::put('users/{user}/toggle-status', [UserController::class, 'toggleActive'])->name('users.toggle-status');
 
     });
 
     
 
-    // bookings 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    // bookings
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'App\Http\Middleware\CheckRole:admin'])->group(function () {
     Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::post('bookings/{booking}/confirm', [BookingController::class, 'confirm'])->name('bookings.confirm');
     Route::post('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::post('bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
 });
 
+// kelola pengguna 
+    Route::resource('customers', CustomerController::class);
 
+// Toggle aktif/nonaktif
+    Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+
+    // update pengguna 
+    Route::prefix('admin')->name('admin.')->middleware('auth', 'admin')->group(function () {
+    Route::resource('venues', App\Http\Controllers\Admin\VenueController::class);
+});
+
+// kelola payment 
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'App\Http\Middleware\CheckRole:admin'])
+    ->group(function () {
+        Route::resource('payments', PaymentController::class);
+
+        // ✅ Tambahkan route untuk export PDF
+        Route::get('payments/export/pdf', [PaymentController::class, 'exportPdf'])
+            ->name('payments.exportPdf');
+    });
 
 });
